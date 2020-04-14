@@ -77,7 +77,7 @@ def update_description(id):
     return profile_schema.jsonify(profile)
 
 @app.route('/profile/<id>')
-def delete_todo(id):
+def delete_profile(id):
     record = Profile.query.get(id)
     db.session.delete(record)
     db.session.commit()
