@@ -19,16 +19,16 @@ class Profile(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     password = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=False)
-    user_profile = db.Column(db.String(150), nullable=False)
+    user_description = db.Column(db.String(150), nullable=False)
 
-    def __init__(self, password, email, user_profile):
+    def __init__(self, password, email, user_description):
         self.password = password
         self.email = email
-        self.user_profile = user_profile
+        self.user_description = user_description
 
 class ProfileSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'password', 'email', 'user_profile')
+        fields = ('id', 'password', 'email', 'user_description')
 
 profile_schema = ProfileSchema()
 profiles_schema = ProfileSchema(many=True)
@@ -55,9 +55,9 @@ def get_profile():
 def add_profile():
     password = request.json['password']
     email = request.json['email']
-    user_profile = request.json['user_profile']
+    user_description = request.json['user_description']
 
-    new_profile = Profile(password, email, user_profile)
+    new_profile = Profile(password, email, user_description)
 
     db.session.add(new_profile)
     db.session.commit()
@@ -65,6 +65,24 @@ def add_profile():
     profile = Profile.query.get(new_profile.id)
     return profile_schema.jsonify(profile)
 
+@app.route("/profile/<id>", methods=["PATCH"])
+def update_description(id):
+    profile = Profile.query.get(id)
+
+    new_description = request.json['user_description']
+
+   profile.user_description = new_description
+
+    db.session.commit()
+    return profile_schema.jsonify(profile)
+
+@app.route('/profile/<id>')
+def delete_todo(id):
+    record = Profile.query.get(id)
+    db.session.delete(record)
+    db.session.commit()
+
+    return jsonify('Deleted.')
 
 if __name__ == "__main__":
     app.debug = True
