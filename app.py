@@ -23,8 +23,8 @@ class Profile(db.Model):
     user_image = db.Column(db.String(200), nullable=False)
     profile_name = db.Column(db.String(32), nullable=False)
 
-    def __init__(self, password, email, user_description, user_image, profile_name):
-        self.password = password
+    def __init__(self, email, user_description, user_image, profile_name):
+        
         self.email = email
         self.user_description = user_description
         self.user_image = user_image
